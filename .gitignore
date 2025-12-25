@@ -1,0 +1,19 @@
+.cache/
+*.lock
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Node (if you add JS later)
+node_modules/
+.env
+.env.local
+
+# Build artifacts
+dist/
+build/
