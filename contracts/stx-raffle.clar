@@ -72,3 +72,90 @@
 (define-read-only (get-round-winner (round uint))
     (map-get? round-winners { round: round })
 )
+
+;; Public Functions - These change the contract state
+
+;; Buy a ticket for the current round
+(define-public (buy-ticket)
+    (let
+        (
+            (round (var-get current-round))
+            (ticket-id (+ (var-get total-tickets-current-round) u1))
+            (buyer tx-sender)
+            (current-player-tickets (default-to u0 (get count (map-get? player-tickets { player: buyer, round: round }))))
+        )
+        ;; Transfer STX from buyer to contract
+        (try! (stx-transfer? ticket-price buyer (as-contract tx-sender)))
+        
+        ;; Store the ticket with buyer info
+        (map-set tickets 
+            { round: round, ticket-id: ticket-id }
+            { buyer: buyer }
+        )
+        
+        ;; Update player's ticket count for this round
+        (map-set player-tickets
+            { player: buyer, round: round }
+            { count: (+ current-player-tickets u1) }
+        )
+        
+        ;; Increase total tickets
+        (var-set total-tickets-current-round ticket-id)
+        
+        ;; Add ticket price to pot
+        (var-set current-pot (+ (var-get current-pot) ticket-price))
+        
+        (ok ticket-id)
+    )
+)
+;; Draw winner - Only contract owner can call this
+(define-public (draw-winner)
+    (let
+        (
+            (round (var-get current-round))
+            (total-tickets (var-get total-tickets-current-round))
+            (pot (var-get current-pot))
+            ;; Use block height for randomness (pseudo-random)
+            (random-seed (mod block-height total-tickets))
+            (winning-ticket-id (+ random-seed u1))
+            (winner-data (map-get? tickets { round: round, ticket-id: winning-ticket-id }))
+            ;; Calculate platform fee (5%)
+            (fee-amount (/ (* pot platform-fee-percent) u100))
+            (winner-amount (- pot fee-amount))
+        )
+        ;; Only owner can draw
+        (asserts! (is-eq tx-sender contract-owner) err-owner-only)
+        
+        ;; Must have at least 1 ticket sold
+        (asserts! (> total-tickets u0) err-no-tickets)
+        
+        ;; Get the winner's address
+        (match winner-data
+            winner-info
+            (let
+                (
+                    (winner-address (get buyer winner-info))
+                )
+                ;; Transfer winnings to winner
+                (try! (as-contract (stx-transfer? winner-amount tx-sender winner-address)))
+                
+                ;; Transfer fee to owner
+                (try! (as-contract (stx-transfer? fee-amount tx-sender contract-owner)))
+                
+                ;; Record the winner
+                (map-set round-winners
+                    { round: round }
+                    { winner: winner-address, pot-size: pot }
+                )
+                
+                ;; Start new round
+                (var-set current-round (+ round u1))
+                (var-set current-pot u0)
+                (var-set total-tickets-current-round u0)
+                
+                (ok winner-address)
+            )
+            err-no-tickets
+        )
+    )
+)
