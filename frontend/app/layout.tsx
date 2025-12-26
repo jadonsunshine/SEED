@@ -1,6 +1,14 @@
 import type { Metadata } from "next";
-import "./globals.css"; // Even if empty, keep this import
+import { Roboto_Flex } from "next/font/google"; 
+import "./globals.css";
 import { Providers } from "./providers";
+
+
+const roboto = Roboto_Flex({ 
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-roboto", 
+});
 
 export const metadata: Metadata = {
   title: "Daily STX Raffle",
@@ -13,8 +21,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body>
+    <html lang="en" className={roboto.variable}>
+      {/* 3. Apply the font class to the body */}
+      <body className={roboto.className}>
         <Providers>{children}</Providers>
       </body>
     </html>
