@@ -3,4 +3,28 @@ name = "testnet"
 stacks_node_rpc_url = "https://api.testnet.hiro.so"
 
 [accounts.deployer]
-mnemonic = "priority amount glass leaf injury cannon festival practice elbow photo switch afford wish bring prosper dinner card bundle stool impact short approve fuel fall"
+mnemonic = "priority amount glass leaf injury cannon festival practice elbow photo switch afford wish bring prosper dinner card bundle stool impact short approve fuel fall"[{
+	"resource": "/home/jadonamite/Projects/seed/frontend/app/providers.tsx",
+	"owner": "typescript",
+	"code": "2305",
+	"severity": 8,
+	"message": "Module '\"@chakra-ui/react\"' has no exported member 'extendTheme'.",
+	"source": "ts",
+	"startLineNumber": 3,
+	"startColumn": 26,
+	"endLineNumber": 3,
+	"endColumn": 37,
+	"origin": "extHost1"
+},{
+	"resource": "/home/jadonamite/Projects/seed/frontend/app/providers.tsx",
+	"owner": "typescript",
+	"code": "2322",
+	"severity": 8,
+	"message": "Type '{ children: ReactNode; theme: any; }' is not assignable to type 'IntrinsicAttributes & ChakraProviderProps'.\n  Property 'theme' does not exist on type 'IntrinsicAttributes & ChakraProviderProps'.",
+	"source": "ts",
+	"startLineNumber": 24,
+	"startColumn": 26,
+	"endLineNumber": 24,
+	"endColumn": 31,
+	"origin": "extHost1"
+}]
