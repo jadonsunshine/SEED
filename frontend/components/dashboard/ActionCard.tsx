@@ -1,12 +1,12 @@
 "use client";
 
-import { Card, CardBody, Stack, Heading, Text, Box, Flex, Button, Input, Divider } from "@chakra-ui/react";
+import { Card, CardBody, Stack, Heading, Text, Box, Flex, Button, Divider } from "@chakra-ui/react";
 import { ArrowForwardIcon } from "@chakra-ui/icons";
 
 export default function ActionCard() {
   return (
     <Card 
-      bg="gray.900" // Dark card for contrast (Bento style often mixes light/dark)
+      bg="gray.900" 
       color="white"
       shadow="xl" 
       rounded="3xl" 
@@ -38,7 +38,7 @@ export default function ActionCard() {
             bg="brand.500" 
             color="white" 
             _hover={{ bg: "brand.400", transform: "scale(1.02)" }}
-            active={{ transform: "scale(0.98)" }}
+            _active={{ transform: "scale(0.98)" }} // <--- FIXED HERE (Added underscore)
             transition="all 0.2s"
             rightIcon={<ArrowForwardIcon />}
             rounded="xl"

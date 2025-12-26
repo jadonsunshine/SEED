@@ -1,20 +1,13 @@
 import type { Metadata } from "next";
-import { Montserrat, Noto_Sans } from "next/font/google"; // New Fonts
+import { Montserrat } from "next/font/google"; 
 import "./globals.css";
 import { Providers } from "./providers";
 
-// 1. Configure Montserrat (For Headings/Logo)
+// Configure Montserrat for the whole app
 const montserrat = Montserrat({ 
   subsets: ["latin"], 
   variable: "--font-montserrat",
-  weight: ["400", "600", "700", "800", "900"], // Extra bold for the logo
-});
-
-// 2. Configure Noto Sans (For Body text)
-const notoSans = Noto_Sans({
-  subsets: ["latin"],
-  variable: "--font-noto",
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "500", "600", "700", "800", "900"], 
 });
 
 export const metadata: Metadata = {
@@ -28,8 +21,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    // 3. Inject both variables
-    <html lang="en" className={`${montserrat.variable} ${notoSans.variable}`}>
+    <html lang="en" className={montserrat.variable}>
       <body>
         <Providers>{children}</Providers>
       </body>
