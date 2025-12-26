@@ -10,48 +10,49 @@ export default function Home() {
   return (
     <Box minH="100vh" bg="#FAFAFA" pb={20}>
       
-      {/* Navbar - Kept simple and clean */}
-      <Box py={6} px={4}>
+      {/* Navbar: "OPENSEASON" Logo */}
+      <Box py={8} px={4}>
         <Container maxW="container.lg">
           <Flex justify="space-between" align="center">
-            <Flex align="center" gap={3}>
-              <Box bg="brand.500" w={10} h={10} rounded="xl" shadow="lg" />
-              <Box>
-                <Heading size="sm" color="gray.800">Daily Raffle</Heading>
-                <Text fontSize="xs" color="gray.500">Stacks Testnet</Text>
-              </Box>
-            </Flex>
+            {/* THE NEW LOGO */}
+            <Heading 
+              fontFamily="var(--font-montserrat)" 
+              fontWeight="900" 
+              fontSize="2xl" 
+              letterSpacing="tighter"
+              color="black"
+            >
+              OPENSEASON
+            </Heading>
+            
             <ConnectWallet />
           </Flex>
         </Container>
       </Box>
 
-      {/* Main Bento Grid */}
-      <Container maxW="container.lg" mt={4}>
+      {/* Main Grid */}
+      <Container maxW="container.lg" mt={2}>
         <Grid 
-          templateColumns={{ base: "1fr", md: "repeat(3, 1fr)" }} // 3 Columns on Desktop
-          templateRows={{ base: "auto", md: "repeat(2, 1fr)" }}    // 2 Rows on Desktop
+          templateColumns={{ base: "1fr", md: "repeat(3, 1fr)" }} 
+          templateRows={{ base: "auto", md: "repeat(2, 1fr)" }}   
           gap={6}
         >
-          
-          {/* 1. Pot Card: Large Square (Spans 2 cols, 2 rows) */}
+          {/* Pot Card */}
           <GridItem colSpan={{ base: 1, md: 2 }} rowSpan={{ base: 1, md: 2 }}>
             <PotCard />
           </GridItem>
 
-          {/* 2. Action Card: Tall Vertical (Spans 1 col, 2 rows) */}
+          {/* Action Card */}
           <GridItem colSpan={{ base: 1, md: 1 }} rowSpan={{ base: 1, md: 2 }}>
             <ActionCard />
           </GridItem>
 
-          {/* 3. Stats Strip (Spans full width at bottom) */}
+          {/* Stats Strip */}
           <GridItem colSpan={{ base: 1, md: 3 }}>
              <Grid templateColumns={{ base: "1fr", md: "1fr 1fr 1fr" }} gap={6}>
                 <StatsCard />
-                {/* You can duplicate StatsCard or add different variants here later */}
              </Grid>
           </GridItem>
-
         </Grid>
       </Container>
     </Box>

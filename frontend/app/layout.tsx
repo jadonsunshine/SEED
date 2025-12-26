@@ -1,18 +1,25 @@
 import type { Metadata } from "next";
-import { Roboto_Flex } from "next/font/google"; 
+import { Montserrat, Noto_Sans } from "next/font/google"; // New Fonts
 import "./globals.css";
 import { Providers } from "./providers";
 
+// 1. Configure Montserrat (For Headings/Logo)
+const montserrat = Montserrat({ 
+  subsets: ["latin"], 
+  variable: "--font-montserrat",
+  weight: ["400", "600", "700", "800", "900"], // Extra bold for the logo
+});
 
-const roboto = Roboto_Flex({ 
+// 2. Configure Noto Sans (For Body text)
+const notoSans = Noto_Sans({
   subsets: ["latin"],
-  display: "swap",
-  variable: "--font-roboto", 
+  variable: "--font-noto",
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
-  title: "Daily STX Raffle",
-  description: "Try your luck on the Stacks Blockchain",
+  title: "OPENSEASON",
+  description: "Daily STX Raffle",
 };
 
 export default function RootLayout({
@@ -21,9 +28,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={roboto.variable}>
-      {/* 3. Apply the font class to the body */}
-      <body className={roboto.className}>
+    // 3. Inject both variables
+    <html lang="en" className={`${montserrat.variable} ${notoSans.variable}`}>
+      <body>
         <Providers>{children}</Providers>
       </body>
     </html>

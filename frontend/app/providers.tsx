@@ -4,12 +4,12 @@ import { ChakraProvider, extendTheme } from '@chakra-ui/react';
 
 const theme = extendTheme({
   fonts: {
-    heading: 'var(--font-roboto), sans-serif',
-    body: 'var(--font-roboto), sans-serif',
+    heading: 'var(--font-montserrat), sans-serif',
+    body: 'var(--font-noto), sans-serif',
   },
   colors: {
     brand: {
-      500: '#27c48fff', 
+      500: '#10B981', 
       600: '#059669',
     },
   },
@@ -17,6 +17,7 @@ const theme = extendTheme({
     global: {
       body: {
         bg: '#FAFAFA',
+        color: '#1A1A1D',
       },
     },
   },
