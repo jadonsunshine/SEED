@@ -1,18 +1,26 @@
 "use client";
 
-import { Card, CardBody, VStack, Heading, Text, Button, NumberInput, NumberInputField, NumberInputStepper, NumberIncrementStepper, NumberDecrementStepper, useToast } from "@chakra-ui/react";
+import { 
+  Card, CardBody, VStack, Heading, Text, Button, 
+  NumberInput, NumberInputField, useToast, Flex 
+} from "@chakra-ui/react";
 import { useState } from "react";
 import { useConnect } from "@stacks/connect-react";
-import { STACKS_TESTNET } from "@stacks/network";
-import { PostConditionMode } from "@stacks/transactions"; // Removed uintCV since we don't need it anymore
+import { PostConditionMode } from "@stacks/transactions";
 import { userSession } from "../../lib/auth";
+import { NETWORK_CONFIG, NetworkKey } from "../../lib/networkConfig"; // Import your new config
 
 export default function ActionCard() {
-  const [ticketCount, setTicketCount] = useState(1);
+  // 1. STATE: Default to Mainnet (or Testnet if you prefer safety first)
+  const [currentNetwork, setCurrentNetwork] = useState<NetworkKey>("mainnet");
+  
+  // 2. CONFIG: Get the correct address/network based on state
+  const config = NETWORK_CONFIG[currentNetwork];
+
   const { doContractCall } = useConnect();
   const toast = useToast();
 
-  const TICKET_PRICE = 0.1; // Updated to match your contract (100,000 uSTX = 0.1 STX)
+  const TICKET_PRICE = 0.1; 
 
   const handleEnterRaffle = async () => {
     if (!userSession.isUserSignedIn()) {
@@ -21,24 +29,30 @@ export default function ActionCard() {
     }
 
     await doContractCall({
-      network: STACKS_TESTNET,
+      // 🟢 DYNAMIC: Uses the network from the toggle
+      network: config.network,
       anchorMode: 1,
-      contractAddress: "ST3GAYKCWBD2PTNR77WGYWCPPR102C5E0C9V1H9ZX",
-      contractName: "stx-raffle",
-      functionName: "buy-ticket", 
       
-      // 🚨 THE FIX: Send empty arguments because your contract takes 0 args
+      // 🟢 DYNAMIC: Uses the address from the toggle
+      contractAddress: config.contractAddress,
+      contractName: config.contractName,
+      
+      functionName: "buy-ticket", 
       functionArgs: [], 
 
       postConditionMode: PostConditionMode.Allow,
       onFinish: (data: any) => {
+        // 🟢 DYNAMIC: Explorer link matches the network
+        const explorerUrl = `https://explorer.hiro.so/txid/${data.txId}?chain=${currentNetwork}`;
+        
         toast({
           title: "Transaction Sent!",
-          description: `Tx ID: ${data.txId}`,
+          description: `View on ${config.label}`,
           status: "success",
           duration: 5000,
           isClosable: true,
         });
+        console.log("Tx ID:", data.txId);
       },
       onCancel: () => {
         toast({ title: "Transaction Cancelled", status: "info" });
@@ -51,39 +65,58 @@ export default function ActionCard() {
       <CardBody display="flex" flexDirection="column" justifyContent="center" p={8}>
         <VStack spacing={6} align="stretch">
           
+          {/* --- NETWORK TOGGLE --- */}
+          <Flex bg="gray.800" p={1} rounded="lg" mb={2}>
+            <Button 
+              size="sm" 
+              flex={1}
+              colorScheme={currentNetwork === "mainnet" ? "orange" : "gray"}
+              variant={currentNetwork === "mainnet" ? "solid" : "ghost"}
+              onClick={() => setCurrentNetwork("mainnet")}
+            >
+              Mainnet
+            </Button>
+            <Button 
+              size="sm" 
+              flex={1}
+              colorScheme={currentNetwork === "testnet" ? "purple" : "gray"}
+              variant={currentNetwork === "testnet" ? "solid" : "ghost"}
+              onClick={() => setCurrentNetwork("testnet")}
+            >
+              Testnet
+            </Button>
+          </Flex>
+
           <Heading size="md" color="white">
             Enter the Raffle
           </Heading>
 
           <Text fontSize="sm" color="gray.400">
-            Current Round Ticket Price: <br/> 
+            Current Round Ticket Price ({config.label}): <br/> 
             <Text as="span" color="brand.400">1 Ticket = {TICKET_PRICE} STX</Text>
           </Text>
 
-          {/* NOTE: Your contract only supports buying 1 ticket per transaction.
-             I have disabled the input so users don't get confused trying to buy 5.
-          */}
           <NumberInput 
             min={1} 
             max={1} 
             value={1} 
-            isDisabled={true} // Locked to 1 for now
+            isDisabled={true} 
             variant="filled"
           >
             <NumberInputField bg="gray.800" color="white" _hover={{ bg: "gray.700" }} />
-            {/* Steppers hidden since we are locked to 1 */}
           </NumberInput>
 
           <Text fontSize="xs" fontWeight="bold" textAlign="right" color="gray.500">
             TOTAL: {TICKET_PRICE} STX
           </Text>
 
+          {/* Dynamic Button Text */}
           <Button 
             size="lg" 
             colorScheme="green" 
             onClick={handleEnterRaffle}
           >
-            Buy 1 Ticket
+            Buy Ticket ({config.label})
           </Button>
 
         </VStack>
