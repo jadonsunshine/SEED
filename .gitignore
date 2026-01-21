@@ -1,7 +1,7 @@
 .cache/
 *.lock
-
-
+settings/Testnet.toml
+settings/Testnet.toml
 # OS
 .DS_Store
 Thumbs.db
