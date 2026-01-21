@@ -1,6 +1,0 @@
-[network]
-name = "testnet"
-stacks_node_rpc_url = "https://api.testnet.hiro.so"
-
-[accounts.deployer]
-mnemonic = "priority amount glass leaf injury cannon festival practice elbow photo switch afford wish bring prosper dinner card bundle stool impact short approve fuel fall"
